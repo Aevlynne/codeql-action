@@ -888,3 +888,7 @@ export function fixInvalidNotificationsInFile(
   sarif = fixInvalidNotifications(sarif, logger);
   fs.writeFileSync(outputPath, JSON.stringify(sarif));
 }
+
+export function isDefaultSetup(): boolean {
+  return process.env["GITHUB_EVENT_NAME"] === "dynamic";
+}

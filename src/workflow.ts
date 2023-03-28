@@ -5,7 +5,7 @@ import * as core from "@actions/core";
 import * as yaml from "js-yaml";
 
 import * as api from "./api-client";
-import { getRequiredEnvParam } from "./util";
+import { getRequiredEnvParam, isDefaultSetup } from "./util";
 
 export interface WorkflowJobStep {
   name?: string;
@@ -276,6 +276,12 @@ export async function getWorkflow(): Promise<Workflow> {
  * Get the path of the currently executing workflow.
  */
 export async function getWorkflowPath(): Promise<string> {
+  if (isDefaultSetup()) {
+    // In default setup, the workflow file is not checked into the repository. Instead it exists at
+    // this fixed path.
+    return "dynamic/github-code-scanning/codeql";
+  }
+
   const repo_nwo = getRequiredEnvParam("GITHUB_REPOSITORY").split("/");
   const owner = repo_nwo[0];
   const repo = repo_nwo[1];

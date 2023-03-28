@@ -16,6 +16,7 @@ import {
   getCodeQLDatabasePath,
   getRequiredEnvParam,
   GITHUB_DOTCOM_URL,
+  isDefaultSetup,
   isHTTPError,
   isInTestMode,
   parseMatrixInput,
@@ -573,8 +574,8 @@ export async function sendStatusReport<S extends StatusReportBase>(
 }
 
 export function workflowEventName() {
-  // If the original event is dynamic CODESCANNING_EVENT_NAME will contain the right info (push/pull_request)
-  if (process.env["GITHUB_EVENT_NAME"] === "dynamic") {
+  // For default setup, `CODESCANNING_EVENT_NAME` will contain the right info (push/pull_request).
+  if (isDefaultSetup()) {
     const value = process.env["CODESCANNING_EVENT_NAME"];
     if (value === undefined || value.length === 0) {
       return process.env["GITHUB_EVENT_NAME"];
